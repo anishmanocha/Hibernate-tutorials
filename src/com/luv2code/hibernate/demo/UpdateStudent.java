@@ -6,9 +6,11 @@ import org.hibernate.cfg.Configuration;
 
 import com.luv2code.hibernate.demo.entity.Student;
 
-public class ReadStudent {
+public class UpdateStudent {
 
 	public static void main(String[] args) {
+		
+		/* This here demonstrates the difference between a bulk and a selective update*/
 		
 		SessionFactory factory= new Configuration()
 								.configure("hibernate.cfg.xml")
@@ -19,32 +21,17 @@ public class ReadStudent {
 		
 		
 		try {
-			Student student= new Student("Test", "Test", "test@gmail.com");
+			int studentId=1;
 			
 			session.beginTransaction();
 			
-			session.save(student);
-			
-			session.getTransaction().commit();
+			Student studentToUpdate=session.get(Student.class, studentId);
+				
+			studentToUpdate.setFirstName("TestingUpdateAgain");
 			
 			System.out.println("Done");
 			
-			//New code to read the student from the database
-			
-			//find out the student's id: primary key
-			
-			session=factory.getCurrentSession();
-			session.beginTransaction();
-			
-			//Retrieve student based on primary key
-			
-			System.out.println("\nGetting student wth id: " + student.getId());
-			
-			Student myStudent= session.get(Student.class, student.getId());
-			
-			System.out.println(myStudent);
-			
-			//commit the transaction
+			session.createQuery("Update Student set email='testemail@gmail.com' ").executeUpdate();
 			
 			session.getTransaction().commit();
 			
